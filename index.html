@@ -1,49 +1,285 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>DevFest Galway 2019</title>
 
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/theme/black.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section class="intro">
+            <h2>
+                <div>REST API e2e testing,</div>
+                <div>an easier way…</div>
+            </h2>
+            <p>Object driven approach to e2e testing.</p>
+            <div class="profile">
+                <img src="assets/profile.jpg" width="100" class="rounded" alt="profile picture">
+                <div class="left name">
+                    <div>Marc Ed. Raffalli</div>
+                    <div><small>Neueda Technologies</small></div>
+                </div>
+            </div>
+        </section>
+        <section data-markdown>
+            <script type="text/template">
+                ## Topics
+                - Context
+                - Available Libraries + examples
+                - `lb-declarative-e2e-test`
+                - Features + examples
+            </script>
+        </section>
+        <section>
+            <section>
+                <h2>Context</h2>
 
-		<script src="js/reveal.js"></script>
+                <p>End to End (e2e) testing is often hard and repetitive</p>
+            </section>
+            <section>
+                <h2>As a result</h2>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true }
-				]
-			});
-		</script>
-	</body>
+                <ul>
+                    <li class="fragment">Boilerplate</li>
+                    <li class="fragment">Hard to maintain</li>
+                    <li class="fragment">Excessively long to execute</li>
+                    <li class="fragment">Problem specific</li>
+                </ul>
+            </section>
+        </section>
+
+        <section data-background="assets/philosoraptor.png" data-background-size="33%">
+            <blockquote>Writing tests makes life easier.</blockquote>
+            <div style="margin-top: 25rem">
+                <div>Why do I spend so much time</div>
+                <div>maintaining these tests?</div>
+            </div>
+        </section>
+
+        <section>
+            <section>
+                <h2>Available libraries</h2>
+                <ul>
+                    <li class="fragment up fade-in-then-semi-out">Postman</li>
+                    <li class="fragment up fade-in-then-semi-out">Selenium</li>
+                    <li class="fragment up">Supertest</li>
+                </ul>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Example with Supertest
+
+                    ```js
+                    describe('GET /user', () => {
+                      it('get user data', (done) => {
+                        request(app)
+                          .get('/user')
+                          .set('Accept', 'application/json')
+                          .expect(200, {id: 'some-id', name: 'john'}, done);
+                      });
+                    });
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    Very straight forward for simple use cases.
+
+                    -
+
+                    Get's more complicated or difficult to maintain with authentication and complex test cases.
+                </script>
+            </section>
+        </section>
+        <section data-markdown>
+            <script type="text/template">
+                ## `lb-declarative-e2e-test`
+
+                <small>https://www.npmjs.com/package/lb-declarative-e2e-test</small>
+            </script>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Features
+
+                    - Self contained (generates Mocha tests, allows `skip` and `only`)
+                    - Set up and tear down hooks
+                    - Test definition as object
+                    - Steps and variable passing
+                    - Response header / body assertion as object
+                    - Auth support
+                    - Multi user assertion
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Example
+
+                    ```js
+                    lbe2e(app, {}, {
+                      'GET /user': {
+                        tests: [{
+                          name: 'get user data',
+                          url: '/user',
+                          headers: {Accept: 'application/json'},
+                          verb: 'get',
+                          expect: {
+                            headers: {status: 200},
+                            body: {id: 'some-id', name: 'john'}
+                          }
+                        }]
+                      }
+                    })
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Set up and tear down hooks
+
+                    ```js
+                    lbe2e(server, {
+                      'Read access': {
+                        beforeEach: [
+                          () => setupThings(),
+                          () => setupMoreThings()
+                        ],
+                        afterEach: cleanUpBehind,
+                        tests: [...]
+                      }
+                    });
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Steps
+
+                    ```js
+                    {
+                      name: 'access token should be voided after logout',
+                      auth: {email: 'foo@app.com', password: 'foo-pass'},
+                      steps: [{
+                        url: '/api/users/logout',
+                        verb: 'post',
+                        expect: 204
+                      }, {
+                        verb: 'get',
+                        url: () => `/api/users/${user.id}`,
+                        expect: 401
+                      }]
+                    }
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Multi user
+
+                    ```js
+                    {
+                      name: 'authenticated users CAN read',
+                      url: '/posts',
+                      verb: 'get',
+                      auth: [
+                        credentials.member,
+                        credentials.author,
+                        credentials.admin
+                      ],
+                      expect: 200
+                    }
+                    ```
+                </script>
+            </section>
+        </section>
+        <section data-markdown>
+            <script type="text/template">
+                ## Read more
+
+                - [Docs](https://marc-ed-raffalli.github.io/en/projects/lb-declarative-e2e-test)
+                - [NPM](https://www.npmjs.com/package/lb-declarative-e2e-test) - `lb-declarative-e2e-test`
+                - [Medium](https://medium.com/@raffalli.marc.ed/rest-api-e2e-testing-an-easier-way-85d265d1825d) - REST API e2e testing, an easier way
+                - [loopback.io](https://loopback.io/doc/en/community/Declarative-test-demo.html) - Declarative test demo
+            </script>
+        </section>
+        <section data-markdown>
+            <script type="text/template">
+                I'm delighted to share it with you today and hope it will be as helpful to you as it was to me
+            </script>
+        </section>
+
+        <section class="end">
+            <div class="profile">
+                <img src="assets/profile.jpg" width="150" class="rounded" alt="profile picture">
+                <div class="left details">
+                    <div>
+                        <img width="32" src="assets/github-logo.svg" alt="GH logo">
+                        <span>marc-ed-raffalli</span>
+                    </div>
+                    <div>
+                        <img width="32" src="assets/medium-logo.png" alt="Medium logo">
+                        <span>@raffalli.marc.ed</span>
+                    </div>
+                </div>
+            </div>
+
+            <p>Thank you everyone! 😃</p>
+        </section>
+    </div>
+</div>
+
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        center: true,
+        hash: true,
+
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {src: 'plugin/highlight/highlight.js', async: true},
+            {src: 'plugin/search/search.js', async: true},
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+</script>
+</body>
 </html>

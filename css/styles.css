@@ -1,0 +1,24 @@
+.intro .profile {
+  margin-top: 5rem; }
+.intro .name {
+  padding-left: 1.5rem; }
+
+.end .profile {
+  margin-bottom: 5rem; }
+  .end .profile img {
+    border: none;
+    background: none;
+    margin: 0 1rem 0 1.5rem; }
+
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.rounded {
+  border-radius: 100%; }
+
+.left {
+  text-align: left; }
+
+/*# sourceMappingURL=styles.css.map */
